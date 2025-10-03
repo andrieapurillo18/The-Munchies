@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bookkeeping-v1';
+const CACHE_NAME = 'bookkeeping-v2';
 const FILES_TO_CACHE = [
   '/',
   '/index.html',
@@ -44,4 +44,5 @@ self.addEventListener('fetch', event => {
         return response || fetch(event.request);
       })
   );
+
 });
