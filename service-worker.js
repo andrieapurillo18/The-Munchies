@@ -1,49 +1,44 @@
-const CACHE_NAME = 'bookkeeping-v2';
-const FILES_TO_CACHE = [
+const CACHE_NAME = 'bookkeeping-app-v2';
+const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/service-worker.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+  // add any CSS or image files if you have them
 ];
 
-// Install service worker
+// Install event – cache all assets
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
-      console.log('[ServiceWorker] Caching app shell');
-      return cache.addAll(FILES_TO_CACHE);
+      return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // Activate new SW immediately
 });
 
-// Activate service worker
+// Activate event – clean old caches
 self.addEventListener('activate', event => {
-  console.log('[ServiceWorker] Activate');
   event.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(
-        keyList.map(key => {
-          if (key !== CACHE_NAME) {
-            console.log('[ServiceWorker] Removing old cache', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    )
   );
-  self.clients.claim();
+  self.clients.claim(); // Take control of all pages immediately
 });
 
-// Fetch requests
+// Fetch event – serve cached assets first, then network fallback
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
-      })
-  );
-
-});
-
+    caches.match(event.request).then(cached => {
+      return cached || fetch(event.request).catch(() => {
+        // optional: fallback content if offline
+        if (event.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
+      });
