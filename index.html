@@ -177,7 +177,7 @@ function renderTrialBalance(){ let debitTotal=0,creditTotal=0; let balances={}; 
 
 function renderIncome(){ let revenue=0,expenses=0,cogs=0; state.transactions.forEach(t=>{ if(t.credit==='Sales'||t.credit==='Service Revenue') revenue+=t.amount; if(t.debit==='Cost of Goods Sold') cogs+=t.amount; if(t.debit.endsWith('Expense')) expenses+=t.amount; }); const tbody=$('incomeTable').querySelector('tbody'); tbody.innerHTML=''; tbody.innerHTML+=`<tr><td>Revenue</td><td class="right">${fmt(revenue)}</td></tr>`; tbody.innerHTML+=`<tr><td>Cost of Goods Sold</td><td class="right">${fmt(cogs)}</td></tr>`; tbody.innerHTML+=`<tr><td>Expenses</td><td class="right">${fmt(expenses)}</td></tr>`; tbody.innerHTML+=`<tr><th>Net Income</th><th class="right">${fmt(revenue-cogs-expenses)}</th></tr>`; }
 
-function renderBalanceSheet(){ let assets=0,liab=0,equity=0; let balances={}; state.accounts.forEach(a=>balances[a]=0); state.transactions.forEach(t=>{ balances[t.debit]+=t.amount; balances[t.credit]-=t.amount; }); Object.entries(balances).forEach(([a,b])=>{ if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid'))||a==='Equipment') assets+=b; if(a.endsWith('Payable')||a==='Loans Payable') liab+=-b; if(a==='Equity') equity+=-b; }); const tbody=$('balanceTable').querySelector('tbody'); tbody.innerHTML=''; tbody.innerHTML+=`<tr><td>Assets</td><td class="right">${fmt(assets)}</td></tr>`; tbody.innerHTML+=`<tr><td>Liabilities</td><td class="right">${fmt(liab)}</td></tr>`; tbody.innerHTML+=`<tr><td>Equity</td><td class="right">${fmt(equity)}</td></tr>`; tbody.innerHTML+=`<tr><th>Total</th><th class="right">${fmt(assets)}</th></tr>`; }
+function renderBalanceSheet(){ let assets=0,liab=0,equity=0; let balances={}; state.accounts.forEach(a=>balances[a]=0); state.transactions.forEach(t=>{ balances[t.debit]+=t.amount; balances[t.credit]-=t.amount; }); Object.entries(balances).forEach(([a,b])=>{ if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid'))||a==='Equipments') assets+=b; if(a.endsWith('Payable')||a==='Loans Payable') liab+=-b; if(a==='Equity') equity+=-b; }); const tbody=$('balanceTable').querySelector('tbody'); tbody.innerHTML=''; tbody.innerHTML+=`<tr><td>Assets</td><td class="right">${fmt(assets)}</td></tr>`; tbody.innerHTML+=`<tr><td>Liabilities</td><td class="right">${fmt(liab)}</td></tr>`; tbody.innerHTML+=`<tr><td>Equity</td><td class="right">${fmt(equity)}</td></tr>`; tbody.innerHTML+=`<tr><th>Total</th><th class="right">${fmt(assets)}</th></tr>`; }
 
 function renderCashFlow(){ const tbody=$('cashTable').querySelector('tbody'); tbody.innerHTML=''; let cashIn=0,cashOut=0; state.transactions.forEach(t=>{ if(t.debit===state.cashAccount){ cashIn+=t.amount; tbody.innerHTML+=`<tr><td>${t.date}</td><td>${t.desc}</td><td class="right">${fmt(t.amount)}</td><td></td></tr>`; } if(t.credit===state.cashAccount){ cashOut+=t.amount; tbody.innerHTML+=`<tr><td>${t.date}</td><td>${t.desc}</td><td></td><td class="right">${fmt(t.amount)}</td></tr>`; } }); $('cashIn').textContent=fmt(cashIn); $('cashOut').textContent=fmt(cashOut); }
 
@@ -241,7 +241,7 @@ $('exportXlsxBtn').onclick = () => {
   // --- Balance Sheet ---
   let assets=0, liab=0, equity=0;
   Object.entries(balances).forEach(([a,b])=>{
-    if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid')||a==='Equipment') assets+=b;
+    if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid')||a==='Equipments') assets+=b;
     if(a.endsWith('Payable')||a==='Loans Payable') liab+=-b;
     if(a==='Equity') equity+=-b;
   });
@@ -282,4 +282,5 @@ loadState(); populateAccounts(); render();
 </body>
 
 </html>
+
 
