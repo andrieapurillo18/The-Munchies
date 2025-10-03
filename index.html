@@ -133,7 +133,7 @@ const $ = id => document.getElementById(id);
 
 let defaultAccounts = [
   'Cash','Accounts Receivable','Inventory - Ingredients','Inventory - Packaging','Inventory - Finished Products',
-  'Prepaid Expenses','Accounts Payable','Loans Payable','Equity','Sales','Service Revenue',
+  'Prepaid Expenses','Equipments','Accounts Payable','Loans Payable','Equity','Sales','Service Revenue',
   'Cost of Goods Sold','Salaries Expense','Rent Expense','Utilities Expense','Misc Expense'
 ];
 
@@ -241,7 +241,7 @@ $('exportXlsxBtn').onclick = () => {
   // --- Balance Sheet ---
   let assets=0, liab=0, equity=0;
   Object.entries(balances).forEach(([a,b])=>{
-    if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid')) assets+=b;
+    if(a==='Cash'||a.startsWith('Accounts Receivable')||a.startsWith('Inventory')||a.startsWith('Prepaid'))||a==='Equipment') assets+=b;
     if(a.endsWith('Payable')||a==='Loans Payable') liab+=-b;
     if(a==='Equity') equity+=-b;
   });
@@ -280,4 +280,5 @@ $('syncBtn').onclick = () => { alert("Sync to GitHub functionality not implement
 loadState(); populateAccounts(); render();
 </script>
 </body>
+
 </html>
